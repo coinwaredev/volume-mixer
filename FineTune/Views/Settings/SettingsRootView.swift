@@ -10,7 +10,6 @@ struct SettingsRootView: View {
     @Bindable var mediaKeyStatus: MediaKeyStatus
     let mediaKeyMonitor: MediaKeyMonitor
     let shortcutsRegistry: ShortcutsRegistry
-    @ObservedObject var updateManager: UpdateManager
 
     enum Section: String, Hashable, CaseIterable, Identifiable {
         case general, audio, shortcuts, updates, about

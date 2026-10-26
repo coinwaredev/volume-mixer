@@ -10,10 +10,6 @@
 	<string>Volume Mixer needs microphone access to capture audio from apps using input-capable devices.</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>Volume Mixer uses Bluetooth to connect paired audio devices from the menu bar.</string>
-	<key>SUEnableAutomaticChecks</key>
-	<false/>
-	<key>SUEnableInstallerLauncherService</key>
-	<true/>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

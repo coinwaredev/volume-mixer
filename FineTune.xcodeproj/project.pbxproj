@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		140F6FF7C7CD8F6C1D73121E /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 75DA616DEB24648C4BDE9092 /* KeyboardShortcuts */; };
-		7980FFE92F261AA200AF5F85 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 79SPARK012F0600000008D52 /* Sparkle */; };
 		7988AE522F1CC55900E6D086 /* fineTuneIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 7988AE512F1CC55900E6D086 /* fineTuneIcon.icon */; };
 		79B1000B2F35000000000002 /* IOBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79B1000A2F35000000000001 /* IOBluetooth.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		79C80E5A2F12FF510021442B /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 79SNAP0012F0600000008D52A /* SnapshotTesting */; };
@@ -65,7 +64,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				79B1000B2F35000000000002 /* IOBluetooth.framework in Frameworks */,
-				7980FFE92F261AA200AF5F85 /* Sparkle in Frameworks */,
 				79FLUID0012F0600000008D52 /* FluidMenuBarExtra in Frameworks */,
 				140F6FF7C7CD8F6C1D73121E /* KeyboardShortcuts in Frameworks */,
 			);
@@ -141,7 +139,6 @@
 			name = FineTune;
 			packageProductDependencies = (
 				79FLUID0022F0600000008D52 /* FluidMenuBarExtra */,
-				79SPARK012F0600000008D52 /* Sparkle */,
 				75DA616DEB24648C4BDE9092 /* KeyboardShortcuts */,
 			);
 			productName = FineTune;
@@ -229,7 +226,6 @@
 			packageReferences = (
 				79SNAP0002F0600000008D52A /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 				79FLUID0002F0600000008D52 /* XCRemoteSwiftPackageReference "FluidMenuBarExtra" */,
-				79SPARK002F0600000008D52 /* XCRemoteSwiftPackageReference "Sparkle" */,
 				25AD8733711702DDEA8EAD12 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -655,14 +651,6 @@
 				minimumVersion = 1.15.0;
 			};
 		};
-		79SPARK002F0600000008D52 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sparkle-project/Sparkle";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -680,11 +668,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 79SNAP0002F0600000008D52A /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
 			productName = SnapshotTesting;
-		};
-		79SPARK012F0600000008D52 /* Sparkle */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 79SPARK002F0600000008D52 /* XCRemoteSwiftPackageReference "Sparkle" */;
-			productName = Sparkle;
 		};
 		C18F337FFBE2D40467959144 /* KeyboardShortcuts */ = {
 			isa = XCSwiftPackageProductDependency;
