@@ -48,14 +48,6 @@ struct SettingsRootView: View {
             )
             .tabItem { Label("Shortcuts", systemImage: "command") }
             .tag(Section.shortcuts)
-
-            UpdatesTab(updateManager: updateManager)
-                .tabItem { Label("Updates", systemImage: "arrow.triangle.2.circlepath") }
-                .tag(Section.updates)
-
-            AboutTab()
-                .tabItem { Label("About", systemImage: "info.circle") }
-                .tag(Section.about)
         }
         .frame(width: 720, height: 560)
         .preferredColorScheme(settings.appSettings.appearance.swiftUIColorScheme)

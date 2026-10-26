@@ -73,9 +73,6 @@ struct MenuBarPopupView: View {
     /// collapsed). Mirrors the `expandedRowID` pattern used for per-app EQ.
     @State private var expandedDeviceUID: String?
 
-    /// Hover state for support link heart animation
-    @State private var isSupportHovered = false
-
     /// Namespace for device toggle animation
     @Namespace private var deviceToggleNamespace
 
@@ -107,7 +104,7 @@ struct MenuBarPopupView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
-            HStack(alignment: .top) {
+            HStack(alignment: .center) {
                 deviceTabsHeader
                 Spacer()
                 if isEditingDevicePriority {
@@ -118,8 +115,7 @@ struct MenuBarPopupView: View {
                     defaultDevicesStatus
                 }
                 Spacer()
-                editPriorityButton
-                settingsButton
+                headerActions
             }
             .padding(.bottom, DesignTokens.Spacing.xs)
 
@@ -143,7 +139,7 @@ struct MenuBarPopupView: View {
             WindowAppearanceBridge(appearance: audioEngine.settingsManager.appSettings.appearance.nsAppearance)
                 .frame(width: 0, height: 0)
         )
-        .darkGlassBackground()
+        .liquidGlassPopup()
         .preferredColorScheme(audioEngine.settingsManager.appSettings.appearance.swiftUIColorScheme)
         .environment(\.appearancePreference, audioEngine.settingsManager.appSettings.appearance)
         .onAppear {
@@ -347,22 +343,6 @@ struct MenuBarPopupView: View {
 
             // Footer: support link + quit
             HStack {
-                Button {
-                    NSWorkspace.shared.open(DesignTokens.Links.support)
-                } label: {
-                    Label("Donate", systemImage: isSupportHovered ? "heart.fill" : "heart")
-                }
-                .buttonStyle(.plain)
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(isSupportHovered ? Color(nsColor: .systemPink) : DesignTokens.Colors.textTertiary)
-                .onHover { hovering in
-                    withAnimation(DesignTokens.Animation.hover) {
-                        isSupportHovered = hovering
-                    }
-                }
-                .accessibilityLabel("Donate to FineTune")
-                .help("Donate to FineTune")
-
                 Spacer()
 
                 Button {
@@ -374,10 +354,7 @@ struct MenuBarPopupView: View {
                             .foregroundStyle(DesignTokens.Colors.textTertiary)
                     }
                 }
-                .buttonStyle(.plain)
-                .font(DesignTokens.Typography.caption)
-                .foregroundStyle(DesignTokens.Colors.textSecondary)
-                .glassButtonStyle()
+                .nativeGlassButton()
                 .accessibilityLabel("Quit FineTune")
                 .help("Quit FineTune (⌘Q)")
             }
@@ -435,7 +412,7 @@ struct MenuBarPopupView: View {
     // MARK: - Device Toggle
 
     /// Icon-only pill toggle for switching between Output and Input devices
-    private var deviceTabsHeader: some View {
+    private var legacyDeviceTabsHeader: some View {
         let iconSize: CGFloat = 13
         let buttonSize: CGFloat = 26
 
@@ -1515,6 +1492,114 @@ struct MenuBarPopupView: View {
             .buttonStyle(.plain)
             .foregroundStyle(DesignTokens.Colors.textTertiary)
             .font(DesignTokens.Typography.caption)
+        }
+    }
+}
+
+// Custom build: the Quit button uses the system Liquid Glass button on macOS 26+
+private extension View {
+    @ViewBuilder
+    func nativeGlassButton() -> some View {
+        if #available(macOS 26.0, *) {
+            self.buttonStyle(.glass)
+                .buttonBorderShape(.capsule)
+        } else {
+            self.buttonStyle(.plain)
+                .font(DesignTokens.Typography.caption)
+                .foregroundStyle(DesignTokens.Colors.textSecondary)
+                .glassButtonStyle()
+        }
+    }
+}
+
+// Custom build: header controls as two matching Liquid Glass capsules on macOS 26+
+extension MenuBarPopupView {
+    @ViewBuilder
+    private var deviceTabsHeader: some View {
+        if #available(macOS 26.0, *) {
+            HStack(spacing: 0) {
+                HeaderGlassSegment(symbol: "speaker.wave.2.fill", help: "Output Devices",
+                                   selected: !showingInputDevices, namespace: deviceToggleNamespace) {
+                    showingInputDevices = false
+                }
+                HeaderGlassSegment(symbol: "mic.fill", help: "Input Devices",
+                                   selected: showingInputDevices, namespace: deviceToggleNamespace) {
+                    showingInputDevices = true
+                }
+            }
+            .padding(HeaderGlassSegment.inset)
+            .glassEffect(.regular, in: Capsule())
+        } else {
+            legacyDeviceTabsHeader
+        }
+    }
+
+    @ViewBuilder
+    private var headerActions: some View {
+        if #available(macOS 26.0, *) {
+            HStack(spacing: 0) {
+                HeaderGlassSegment(symbol: isEditingDevicePriority ? "checkmark" : "pencil",
+                                   help: isEditingDevicePriority ? "Done reordering" : "Reorder devices") {
+                    toggleDevicePriorityEdit()
+                }
+                HeaderGlassSegment(symbol: "gearshape", help: "Settings") {
+                    openSettingsWindow()
+                }
+            }
+            .padding(HeaderGlassSegment.inset)
+            .glassEffect(.regular, in: Capsule())
+        } else {
+            editPriorityButton
+            settingsButton
+        }
+    }
+}
+
+/// One icon slot inside a header glass capsule. With `selected` it acts as a
+/// segment (accent pill slides between segments); without it, a plain action.
+private struct HeaderGlassSegment: View {
+    static let height: CGFloat = 28
+    static let inset: CGFloat = 2
+    static let width: CGFloat = 34
+    static let iconSize: CGFloat = 13
+
+    let symbol: String
+    let help: String
+    var selected: Bool? = nil
+    var namespace: Namespace.ID? = nil
+    let action: () -> Void
+
+    @State private var isHovered = false
+
+    var body: some View {
+        Button {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.75)) { action() }
+        } label: {
+            Image(systemName: symbol)
+                .font(.system(size: Self.iconSize, weight: .medium))
+                .contentTransition(.symbolEffect(.replace))
+                .foregroundStyle(selected == true ? Color.white : Color.primary.opacity(isHovered ? 1 : 0.8))
+                .frame(width: Self.width, height: Self.height - Self.inset * 2)
+                .background { pill }
+                .contentShape(Capsule())
+        }
+        .buttonStyle(.plain)
+        .onHover { isHovered = $0 }
+        .animation(DesignTokens.Animation.hover, value: isHovered)
+        .help(help)
+        .accessibilityLabel(help)
+        .accessibilityAddTraits(selected == true ? .isSelected : [])
+    }
+
+    @ViewBuilder
+    private var pill: some View {
+        if selected == true, let namespace {
+            Capsule()
+                .fill(Color.accentColor)
+                .matchedGeometryEffect(id: "deviceToggle", in: namespace)
+        } else if isHovered {
+            Capsule()
+                .fill(Color.primary.opacity(0.1))
         }
     }
 }
