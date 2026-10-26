@@ -5,7 +5,6 @@ import AppKit
 // MARK: - App-Wide Settings Enums
 
 enum MenuBarIconStyle: String, Codable, CaseIterable, Identifiable {
-    case `default` = "Default"
     case speaker = "Speaker"
     case device = "Device"
     case waveform = "Waveform"
@@ -13,10 +12,9 @@ enum MenuBarIconStyle: String, Codable, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    /// The icon name - either asset catalog name or SF Symbol
+    /// SF Symbol name
     var iconName: String {
         switch self {
-        case .default: return "MenuBarIcon"
         case .speaker: return "speaker.wave.2.fill"
         case .device: return "headphones"
         case .waveform: return "waveform"
@@ -24,9 +22,10 @@ enum MenuBarIconStyle: String, Codable, CaseIterable, Identifiable {
         }
     }
 
-    /// Whether this uses an SF Symbol (vs asset catalog image)
-    var isSystemSymbol: Bool {
-        self != .default
+    /// Saved styles that no longer exist (the old "Default" app-logo icon) fall back to Speaker.
+    init(from decoder: Decoder) throws {
+        let raw = try decoder.singleValueContainer().decode(String.self)
+        self = MenuBarIconStyle(rawValue: raw) ?? .speaker
     }
 }
 
@@ -76,23 +75,7 @@ extension AppearancePreference {
     }
 }
 
-// MARK: - Menu Bar Popup Size
-
-enum MenuBarPopupSize: String, Codable, CaseIterable, Identifiable, CustomStringConvertible {
-    case compact
-    case comfortable
-    case spacious
-
-    var id: String { rawValue }
-
-    var description: String {
-        switch self {
-        case .compact: return "Compact"
-        case .comfortable: return "Comfortable"
-        case .spacious: return "Spacious"
-        }
-    }
-}
+// MARK: - Popup Dimensions
 
 struct PopupDimensions: Equatable {
     let width: CGFloat
@@ -103,29 +86,8 @@ struct PopupDimensions: Equatable {
     let maxContentHeight: CGFloat
 }
 
-extension MenuBarPopupSize {
-    var dimensions: PopupDimensions {
-        switch self {
-        case .compact:
-            return PopupDimensions(
-                width: 330,
-                contentPadding: 10,
-                maxContentHeight: 560
-            )
-        case .comfortable:
-            return PopupDimensions(
-                width: 350,
-                contentPadding: 12,
-                maxContentHeight: 660
-            )
-        case .spacious:
-            return PopupDimensions(
-                width: 390,
-                contentPadding: 14,
-                maxContentHeight: 760
-            )
-        }
-    }
+extension PopupDimensions {
+    static let standard = PopupDimensions(width: 330, contentPadding: 10, maxContentHeight: 600)
 }
 
 // MARK: - Volume Hotkey Step Size

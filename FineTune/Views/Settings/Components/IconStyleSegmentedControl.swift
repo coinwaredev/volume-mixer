@@ -30,17 +30,8 @@ private struct IconOption: View {
 
     var body: some View {
         Button(action: onSelect) {
-            Group {
-                if style.isSystemSymbol {
-                    Image(systemName: style.iconName)
-                        .font(.system(size: 14))
-                } else {
-                    Image(style.iconName)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 14, height: 14)
-                }
-            }
+            Image(systemName: style.iconName)
+                .font(.system(size: 14))
             .foregroundStyle(isSelected ? DesignTokens.Colors.accentPrimary : DesignTokens.Colors.textSecondary)
             .frame(width: 30, height: 30)
             .contentShape(Rectangle())
@@ -62,7 +53,6 @@ private struct IconOption: View {
 
 #Preview("Icon Style Segmented Control") {
     VStack(spacing: 16) {
-        IconStyleSegmentedControl(selection: .constant(.default))
         IconStyleSegmentedControl(selection: .constant(.speaker))
         IconStyleSegmentedControl(selection: .constant(.equalizer))
     }

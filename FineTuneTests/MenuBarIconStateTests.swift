@@ -163,21 +163,6 @@ struct SpeakerBaselineTests {
 @Suite("MenuBarIconState.baseline — non-speaker styles (static)")
 struct NonSpeakerBaselineTests {
 
-    @Test(".default is asset regardless of volume")
-    func defaultAsset() {
-        let expected = MenuBarIconState.staticBaseline(.asset("MenuBarIcon"))
-        for v in [Float(0.0), 0.25, 0.5, 0.75, 1.0] {
-            #expect(MenuBarIconState.baseline(style: .default, volume: v, muted: false) == expected, "volume=\(v)")
-        }
-    }
-
-    @Test(".default ignores mute (non-speaker styles keep static baseline)")
-    func defaultIgnoresMute() {
-        let expected = MenuBarIconState.staticBaseline(.asset("MenuBarIcon"))
-        #expect(MenuBarIconState.baseline(style: .default, volume: 0.5, muted: true) == expected)
-        #expect(MenuBarIconState.baseline(style: .default, volume: 0.0, muted: true) == expected)
-    }
-
     @Test(".waveform is waveform symbol regardless of volume")
     func waveformSymbol() {
         let expected = MenuBarIconState.staticBaseline(.systemSymbol("waveform"))
@@ -227,12 +212,6 @@ struct StyleIconNameConsistencyTests {
     /// Baseline symbols for non-speaker styles must match the pre-existing
     /// MenuBarIconStyle.iconName mapping so switching between dynamic and static
     /// codepaths produces the same visual for those styles.
-
-    @Test(".default baseline image matches MenuBarIconStyle.default.iconName")
-    func defaultMatches() {
-        let baseline = MenuBarIconState.baseline(style: .default, volume: 0.5, muted: false)
-        #expect(baseline.image == .asset(MenuBarIconStyle.default.iconName))
-    }
 
     @Test(".waveform baseline image matches MenuBarIconStyle.waveform.iconName")
     func waveformMatches() {

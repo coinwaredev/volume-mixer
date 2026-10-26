@@ -46,10 +46,10 @@ struct MenuBarIconImageSizeTests {
 
     @Test("template rendering and accessibility description survive")
     func templateAndAccessibilitySurvive() throws {
-        for image in [MenuBarIconImage.systemSymbol("speaker.fill"), .asset("MenuBarIcon")] {
+        for image in [MenuBarIconImage.systemSymbol("speaker.fill"), .systemSymbol("waveform")] {
             let rendered = try #require(image.nsImage())
             #expect(rendered.isTemplate, "\(image) lost template rendering")
-            #expect(rendered.accessibilityDescription == "FineTune", "\(image) lost accessibility description")
+            #expect(rendered.accessibilityDescription == "Volume Mixer", "\(image) lost accessibility description")
         }
     }
 }

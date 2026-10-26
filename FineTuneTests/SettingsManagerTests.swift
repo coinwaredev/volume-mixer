@@ -222,7 +222,7 @@ struct AppSettingsDefaultTests {
     func defaults() {
         let settings = AppSettings()
         #expect(settings.launchAtLogin == false)
-        #expect(settings.menuBarIconStyle == .default)
+        #expect(settings.menuBarIconStyle == .speaker)
         #expect(settings.defaultNewAppVolume == 1.0)
         #expect(settings.lockInputDevice == true)
         #expect(settings.showDeviceDisconnectAlerts == true)
@@ -424,18 +424,15 @@ struct DeviceIconOverrideTests {
 @Suite("MenuBarIconStyle — Enumeration")
 struct MenuBarIconStyleTests {
 
-    @Test("allCases has 5 styles")
+    @Test("allCases has 4 styles")
     func allCasesCount() {
-        #expect(MenuBarIconStyle.allCases.count == 5)
+        #expect(MenuBarIconStyle.allCases.count == 4)
     }
 
-    @Test("Only 'default' is not a system symbol")
-    func defaultNotSystemSymbol() {
-        #expect(!MenuBarIconStyle.default.isSystemSymbol)
-        #expect(MenuBarIconStyle.speaker.isSystemSymbol)
-        #expect(MenuBarIconStyle.device.isSystemSymbol)
-        #expect(MenuBarIconStyle.waveform.isSystemSymbol)
-        #expect(MenuBarIconStyle.equalizer.isSystemSymbol)
+    @Test("The removed \"Default\" style decodes as Speaker")
+    func removedDefaultDecodesAsSpeaker() throws {
+        let decoded = try JSONDecoder().decode(MenuBarIconStyle.self, from: Data("\"Default\"".utf8))
+        #expect(decoded == .speaker)
     }
 
     @Test("Every style has a non-empty icon name")

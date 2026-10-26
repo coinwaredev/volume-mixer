@@ -93,11 +93,7 @@ struct MenuBarPopupView: View {
 
     @Environment(\.openSettings) private var openSettings
 
-    // MARK: - Resolved Dimensions
-
-    private var popupDimensions: PopupDimensions {
-        audioEngine.settingsManager.appSettings.popupSize.dimensions
-    }
+    private let popupDimensions = PopupDimensions.standard
 
     var body: some View {
         VStack(alignment: .leading, spacing: DesignTokens.Spacing.sm) {
@@ -388,6 +384,7 @@ struct MenuBarPopupView: View {
                                 automatic: device.icon,
                                 deviceName: device.name
                             ),
+                            symbol: badgeSymbol(for: device, isInput: true),
                             name: device.name,
                             isSelected: device.id == deviceVolumeMonitor.defaultInputDeviceID,
                             fallbackSymbol: "mic",
@@ -400,6 +397,17 @@ struct MenuBarPopupView: View {
                 }
             }
         }
+    }
+
+    /// SF Symbol for a device badge: the user's override, or the suggested symbol when the
+    /// device has no artwork of its own (its icon is then a template symbol image).
+    private func badgeSymbol(for device: AudioDevice, isInput: Bool) -> String? {
+        if let override = audioEngine.settingsManager.getDeviceIconOverride(for: device.uid),
+           NSImage(systemSymbolName: override, accessibilityDescription: nil) != nil {
+            return override
+        }
+        guard device.icon?.isTemplate ?? true else { return nil }
+        return isInput ? device.id.suggestedInputIconSymbol() : device.id.suggestedIconSymbol()
     }
 
     /// Output device row: badge + name, with the AutoEQ picker for headphones.
@@ -417,6 +425,7 @@ struct MenuBarPopupView: View {
                 automatic: device.icon,
                 deviceName: device.name
             ),
+            symbol: badgeSymbol(for: device, isInput: false),
             name: device.name,
             isSelected: device.id == deviceVolumeMonitor.defaultDeviceID,
             isFocused: hasKeyboardEngaged && selectedRow == .device(uid: device.uid),

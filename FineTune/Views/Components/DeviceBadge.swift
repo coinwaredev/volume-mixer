@@ -18,9 +18,13 @@ struct DeviceBadge: View {
     /// output devices; input device rows pass `"mic"` so the fallback matches
     /// the row's domain.
     var fallbackSymbol: String = "speaker.wave.2.fill"
+    /// SF Symbol to draw instead of `icon`. Symbols drawn at a point size snap to
+    /// the pixel grid; a scaled symbol image lands between pixels and looks off-centre.
+    var symbol: String? = nil
 
     private static let badgeSize: CGFloat = 26
     private static let glyphSize: CGFloat = 15
+    private static let symbolSize: CGFloat = 13
 
     var body: some View {
         ZStack {
@@ -29,6 +33,11 @@ struct DeviceBadge: View {
                 .fill(isSelected ? Color.white : Color.primary.opacity(0.14))
 
             // Glyph — device icon when present, fallback SF Symbol otherwise.
+            if let symbol {
+                Image(systemName: symbol)
+                    .font(.system(size: Self.symbolSize))
+                    .foregroundStyle(isSelected ? Color.accentColor : Color.primary)
+            } else {
             Group {
                 if let icon {
                     Image(nsImage: icon)
@@ -42,6 +51,7 @@ struct DeviceBadge: View {
             }
             .frame(width: Self.glyphSize, height: Self.glyphSize)
             .foregroundStyle(isSelected ? Color.accentColor : Color.primary)
+            }
         }
         .frame(width: Self.badgeSize, height: Self.badgeSize)
         .accessibilityHidden(true)

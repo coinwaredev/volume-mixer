@@ -71,8 +71,6 @@ extension MenuBarIconState {
             return .speakerVolume(.bucket(for: volume))
         case .device:
             return .device(symbol: deviceSymbol)
-        case .default:
-            return .staticBaseline(.asset("MenuBarIcon"))
         case .waveform:
             return .staticBaseline(.systemSymbol("waveform"))
         case .equalizer:

@@ -25,7 +25,7 @@ struct IgnoredAppInfo: Codable, Equatable {
 nonisolated struct AppSettings: Codable, Equatable {
     // General
     var launchAtLogin: Bool = false
-    var menuBarIconStyle: MenuBarIconStyle = .default
+    var menuBarIconStyle: MenuBarIconStyle = .speaker
 
     // Audio
     var defaultNewAppVolume: Float = 1.0      // 100% (unity gain)
@@ -54,7 +54,6 @@ nonisolated struct AppSettings: Codable, Equatable {
     var appearance: AppearancePreference = .system  // Follow system appearance, or lock light/dark
 
     // Popup
-    var popupSize: MenuBarPopupSize = .comfortable  // Overall menu bar popup size and density
 
     init() {}
 
@@ -66,7 +65,7 @@ nonisolated struct AppSettings: Codable, Equatable {
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         launchAtLogin = try c.decodeIfPresent(Bool.self, forKey: .launchAtLogin) ?? false
-        menuBarIconStyle = try c.decodeIfPresent(MenuBarIconStyle.self, forKey: .menuBarIconStyle) ?? .default
+        menuBarIconStyle = try c.decodeIfPresent(MenuBarIconStyle.self, forKey: .menuBarIconStyle) ?? .speaker
         defaultNewAppVolume = try c.decodeIfPresent(Float.self, forKey: .defaultNewAppVolume) ?? 1.0
         lockInputDevice = try c.decodeIfPresent(Bool.self, forKey: .lockInputDevice) ?? true
         showDeviceDisconnectAlerts = try c.decodeIfPresent(Bool.self, forKey: .showDeviceDisconnectAlerts) ?? true
@@ -77,7 +76,6 @@ nonisolated struct AppSettings: Codable, Equatable {
         volumeHotkeyStep = try c.decodeIfPresent(VolumeHotkeyStep.self, forKey: .volumeHotkeyStep) ?? .normal
         customShortcuts = try c.decodeIfPresent([String: ShortcutCodable].self, forKey: .customShortcuts) ?? [:]
         appearance = try c.decodeIfPresent(AppearancePreference.self, forKey: .appearance) ?? .system
-        popupSize = try c.decodeIfPresent(MenuBarPopupSize.self, forKey: .popupSize) ?? .comfortable
     }
 }
 

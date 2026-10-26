@@ -33,7 +33,7 @@ struct ShortcutsTab: View {
         SettingsSection("Volume") {
             SettingsRow(
                 "Volume Step",
-                description: "How much each keypress changes the volume. Applies to media keys, configured hotkeys, and arrow-key nav in the popup."
+                description: "How much each keypress changes the volume"
             ) {
                 Picker("", selection: $settings.appSettings.volumeHotkeyStep) {
                     ForEach(VolumeHotkeyStep.allCases) { step in

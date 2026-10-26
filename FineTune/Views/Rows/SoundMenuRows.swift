@@ -71,6 +71,7 @@ struct MasterVolumeRow: View {
 /// A device in the Output or Input list: badge + name, click to make it the default.
 struct SoundMenuDeviceRow<Trailing: View>: View {
     let icon: NSImage?
+    var symbol: String? = nil
     let name: String
     let isSelected: Bool
     var fallbackSymbol: String = "speaker.wave.2.fill"
@@ -80,7 +81,7 @@ struct SoundMenuDeviceRow<Trailing: View>: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            DeviceBadge(icon: icon, isSelected: isSelected, fallbackSymbol: fallbackSymbol)
+            DeviceBadge(icon: icon, isSelected: isSelected, fallbackSymbol: fallbackSymbol, symbol: symbol)
             Text(name)
                 .font(.system(size: 13))
                 .lineLimit(1)
@@ -97,9 +98,9 @@ struct SoundMenuDeviceRow<Trailing: View>: View {
 }
 
 extension SoundMenuDeviceRow where Trailing == EmptyView {
-    init(icon: NSImage?, name: String, isSelected: Bool, fallbackSymbol: String = "speaker.wave.2.fill",
-         isFocused: Bool = false, onSelect: @escaping () -> Void) {
-        self.init(icon: icon, name: name, isSelected: isSelected, fallbackSymbol: fallbackSymbol,
+    init(icon: NSImage?, symbol: String? = nil, name: String, isSelected: Bool,
+         fallbackSymbol: String = "speaker.wave.2.fill", isFocused: Bool = false, onSelect: @escaping () -> Void) {
+        self.init(icon: icon, symbol: symbol, name: name, isSelected: isSelected, fallbackSymbol: fallbackSymbol,
                   isFocused: isFocused, onSelect: onSelect, trailing: { EmptyView() })
     }
 }
@@ -116,7 +117,7 @@ struct SoundMenuDisclosureRow: View {
     var body: some View {
         Button(action: onToggle) {
             HStack(spacing: 10) {
-                DeviceBadge(icon: nil, isSelected: false, fallbackSymbol: symbol)
+                DeviceBadge(icon: nil, isSelected: false, symbol: symbol)
                 Text(title)
                     .font(.system(size: 13))
                 Spacer(minLength: 4)
