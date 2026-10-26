@@ -26,7 +26,7 @@ codesign --force --deep --sign "$IDENTITY" ${ENT_ARGS[@]+"${ENT_ARGS[@]}"} "$BUI
 codesign --verify --deep "$BUILT"
 
 echo "==> Installing"
-osascript -e 'quit app id "com.finetuneapp.FineTune"' 2>/dev/null || true
+osascript -e 'quit app id "com.coinwaredev.VolumeMixer"' 2>/dev/null || true
 sleep 2
 pkill -x "Volume Mixer" 2>/dev/null || true
 pkill -x FineTune 2>/dev/null || true

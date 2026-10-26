@@ -7,7 +7,7 @@ import AppKit
 @Suite("TargetAppResolver")
 @MainActor
 struct TargetAppResolverTests {
-    private static let ownBundleID = "com.finetuneapp.FineTune"
+    private static let ownBundleID = "com.coinwaredev.VolumeMixer"
 
     // MARK: - No-audible fallback (Phase 1 behavior preserved)
 

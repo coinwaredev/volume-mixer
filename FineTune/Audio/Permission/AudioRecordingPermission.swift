@@ -3,7 +3,7 @@ import Foundation
 import AppKit
 import os
 
-private let logger = Logger(subsystem: "com.finetuneapp.FineTune", category: "Permission")
+private let logger = Logger(subsystem: "com.coinwaredev.VolumeMixer", category: "Permission")
 
 // MARK: - Permission Status
 

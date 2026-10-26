@@ -820,6 +820,14 @@ final class SettingsManager {
         }
     }
 
+    /// Re-registers the login item when the setting is on but the system has no record of it,
+    /// e.g. after the bundle identifier changed from FineTune's.
+    func reconcileLaunchAtLogin() {
+        if settings.appSettings.launchAtLogin && SMAppService.mainApp.status != .enabled {
+            setLaunchAtLogin(true)
+        }
+    }
+
     /// Returns the actual launch at login status from the system
     var isLaunchAtLoginEnabled: Bool {
         SMAppService.mainApp.status == .enabled

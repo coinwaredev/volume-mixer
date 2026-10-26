@@ -5,7 +5,7 @@ import FluidMenuBarExtra
 import AppKit
 import os
 
-private let logger = Logger(subsystem: "com.finetuneapp.FineTune", category: "App")
+private let logger = Logger(subsystem: "com.coinwaredev.VolumeMixer", category: "App")
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
@@ -104,6 +104,7 @@ struct FineTuneApp: App {
         OrphanedTapCleanup.destroyOrphanedDevices()
 
         let settings = SettingsManager()
+        settings.reconcileLaunchAtLogin()
         let profileManager = AutoEQProfileManager()
         let permission = AudioRecordingPermission()
         let engine = AudioEngine(permission: permission, settingsManager: settings, autoEQProfileManager: profileManager)
@@ -205,7 +206,7 @@ struct FineTuneApp: App {
         // status item has been materialized before any hotkey can fire.
         let popupController = MenuBarPopupController()
         let resolver = TargetAppResolver(
-            ownBundleID: Bundle.main.bundleIdentifier ?? "com.finetuneapp.FineTune"
+            ownBundleID: Bundle.main.bundleIdentifier ?? "com.coinwaredev.VolumeMixer"
         )
         resolver.start()
         let registry = ShortcutsRegistry(

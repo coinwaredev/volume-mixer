@@ -13,7 +13,7 @@ struct DeviceDetailSheet: View {
 
     @State private var viewModel: DeviceInspectorViewModel
 
-    private static let logger = Logger(subsystem: "com.finetuneapp.FineTune", category: "DeviceDetailSheet")
+    private static let logger = Logger(subsystem: "com.coinwaredev.VolumeMixer", category: "DeviceDetailSheet")
 
     init(
         device: AudioDevice,

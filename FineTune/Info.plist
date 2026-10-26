@@ -15,10 +15,10 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>finetune</string>
+				<string>volumemixer</string>
 			</array>
 			<key>CFBundleURLName</key>
-			<string>com.finetuneapp.FineTune</string>
+			<string>com.coinwaredev.VolumeMixer</string>
 		</dict>
 	</array>
 </dict>

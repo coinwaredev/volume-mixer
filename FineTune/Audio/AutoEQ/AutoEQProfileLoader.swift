@@ -4,7 +4,7 @@ import os
 
 /// Handles file I/O for AutoEQ profiles: managing imported profile files on disk.
 nonisolated final class AutoEQProfileLoader {
-    private let logger = Logger(subsystem: "com.finetuneapp.FineTune", category: "AutoEQProfileLoader")
+    private let logger = Logger(subsystem: "com.coinwaredev.VolumeMixer", category: "AutoEQProfileLoader")
 
     private var importDirectory: URL {
         FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
