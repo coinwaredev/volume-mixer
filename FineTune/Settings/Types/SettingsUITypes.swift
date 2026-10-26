@@ -108,20 +108,20 @@ extension MenuBarPopupSize {
         switch self {
         case .compact:
             return PopupDimensions(
-                width: 470,
-                contentPadding: 12,
+                width: 330,
+                contentPadding: 10,
                 maxContentHeight: 560
             )
         case .comfortable:
             return PopupDimensions(
-                width: 510,
-                contentPadding: 16,
+                width: 350,
+                contentPadding: 12,
                 maxContentHeight: 660
             )
         case .spacious:
             return PopupDimensions(
-                width: 560,
-                contentPadding: 20,
+                width: 390,
+                contentPadding: 14,
                 maxContentHeight: 760
             )
         }

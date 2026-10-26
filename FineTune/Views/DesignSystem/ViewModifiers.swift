@@ -30,10 +30,8 @@ struct HoverableRowModifier: ViewModifier {
 struct SectionHeaderStyleModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .font(DesignTokens.Typography.sectionHeader)
-            .foregroundStyle(DesignTokens.Colors.sectionHeaderText)
-            .tracking(DesignTokens.Typography.sectionHeaderTracking)
-            .textCase(.uppercase)
+            .font(.system(size: 11.5, weight: .semibold))
+            .foregroundStyle(.secondary)
     }
 }
 

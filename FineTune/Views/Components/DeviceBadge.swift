@@ -2,10 +2,9 @@
 import SwiftUI
 import AppKit
 
-/// Circular tinted badge that replaces the leading radio button on a device row.
-/// Selected state uses a gradient of `Color.accentColor` so it follows the user's
-/// system accent at full scope. Unselected state uses a monochrome fill from
-/// `DesignTokens.Colors.deviceBadgeMonoFill`.
+/// Circular badge that replaces the leading radio button on a device row, drawn
+/// like the macOS Sound menu: the selected device sits on a white disc with an
+/// accent-colored glyph; the others on a soft translucent disc.
 ///
 /// The badge owns no behavior. The parent row container handles tap-to-set-default
 /// via a row-level `TapGesture` so the click target spans the whole row, mirroring
@@ -20,28 +19,14 @@ struct DeviceBadge: View {
     /// the row's domain.
     var fallbackSymbol: String = "speaker.wave.2.fill"
 
-    private static let badgeSize: CGFloat = 28
-    private static let glyphSize: CGFloat = 20
+    private static let badgeSize: CGFloat = 26
+    private static let glyphSize: CGFloat = 15
 
     var body: some View {
         ZStack {
-            // Background fill — accent gradient when selected, mono fill otherwise.
-            if isSelected {
-                Circle()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color.accentColor,
-                                Color.accentColor.opacity(0.78)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-            } else {
-                Circle()
-                    .fill(DesignTokens.Colors.deviceBadgeMonoFill)
-            }
+            // Sound-menu style: white disc when selected, soft disc otherwise.
+            Circle()
+                .fill(isSelected ? Color.white : Color.primary.opacity(0.14))
 
             // Glyph — device icon when present, fallback SF Symbol otherwise.
             Group {
@@ -51,20 +36,15 @@ struct DeviceBadge: View {
                         .aspectRatio(contentMode: .fit)
                 } else {
                     Image(systemName: fallbackSymbol)
-                        .symbolRenderingMode(.hierarchical)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
                 }
             }
             .frame(width: Self.glyphSize, height: Self.glyphSize)
-            .foregroundStyle(glyphForeground)
+            .foregroundStyle(isSelected ? Color.accentColor : Color.primary)
         }
         .frame(width: Self.badgeSize, height: Self.badgeSize)
         .accessibilityHidden(true)
-    }
-
-    private var glyphForeground: Color {
-        isSelected
-            ? Color.white
-            : DesignTokens.Colors.deviceBadgeMonoForeground
     }
 }
 

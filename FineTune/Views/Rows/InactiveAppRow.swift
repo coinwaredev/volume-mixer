@@ -4,7 +4,6 @@ import SwiftUI
 /// A row displaying a pinned but inactive app (not currently producing audio).
 /// Similar to AppRow but:
 /// - Uses PinnedAppInfo instead of AudioApp
-/// - VU meter always shows 0 (no audio level polling)
 /// - Slightly dimmed appearance to indicate inactive state
 /// - All settings (volume/mute/EQ/device) work normally and are persisted
 struct InactiveAppRow: View {
@@ -104,69 +103,32 @@ struct InactiveAppRow: View {
     }
 
     var body: some View {
-        ExpandableGlassRow(isExpanded: isEQExpanded, isFocused: isFocused) {
-            // Header: Main row content (always visible)
-            HStack(spacing: DesignTokens.Spacing.sm) {
-                // VU Meter (always 0 for inactive apps)
-                VUMeter(level: 0, isMuted: isMuted || volume == 0)
-
-                // App icon (no activation for inactive apps)
-                Image(nsImage: icon)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: DesignTokens.Dimensions.rowContentHeight - 4, height: DesignTokens.Dimensions.rowContentHeight - 4)
-
-                // App name + optional routing subtitle (hidden when the app is on
-                // system default).
-                VStack(alignment: .leading, spacing: 1) {
-                    Text(appInfo.displayName)
-                        .font(DesignTokens.Typography.rowName)
-                        .lineLimit(1)
-                        .help(appInfo.displayName)
-                        .foregroundStyle(DesignTokens.Colors.textPrimary)
-
-                    if let subtitle = DevicePicker.routingSubtitle(
-                        devices: devices,
-                        selectedDeviceUID: selectedDeviceUID ?? defaultDeviceUID ?? "",
-                        selectedDeviceUIDs: selectedDeviceUIDs,
-                        isFollowingDefault: isFollowingDefault,
-                        mode: deviceSelectionMode
-                    ) {
-                        Text(subtitle)
-                            .font(.system(size: 9))
-                            .foregroundStyle(DesignTokens.Colors.textTertiary)
-                            .lineLimit(1)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                // Shared controls section (VU meter always 0 for inactive apps)
-                AppRowControls(
-                    volume: volume,
-                    isMuted: isMuted,
-                    devices: devices,
-                    deviceIconOverrides: deviceIconOverrides,
-                    selectedDeviceUID: selectedDeviceUID ?? defaultDeviceUID ?? "",
-                    selectedDeviceUIDs: selectedDeviceUIDs,
-                    isFollowingDefault: isFollowingDefault,
-                    defaultDeviceUID: defaultDeviceUID,
-                    deviceSelectionMode: deviceSelectionMode,
-                    boost: boost,
-                    isEQExpanded: isEQExpanded,
-                    onVolumeChange: onVolumeChange,
-                    onMuteChange: onMuteChange,
-                    onBoostChange: onBoostChange,
-                    onDeviceSelected: onDeviceSelected,
-                    onDevicesSelected: onDevicesSelected,
-                    onDeviceModeChange: onDeviceModeChange,
-                    onSelectFollowDefault: onSelectFollowDefault,
-                    onEQToggle: onEQToggle,
-                    isRowFocused: isFocused
-                )
-            }
-            .frame(height: DesignTokens.Dimensions.rowContentHeight)
-            .opacity(0.6)
-        } expandedContent: {
+        MixerAppRow(
+            icon: icon,
+            name: appInfo.displayName,
+            volume: volume,
+            isMuted: isMuted,
+            isInactive: true,
+            devices: devices,
+            deviceIconOverrides: deviceIconOverrides,
+            selectedDeviceUID: selectedDeviceUID ?? defaultDeviceUID ?? "",
+            selectedDeviceUIDs: selectedDeviceUIDs,
+            isFollowingDefault: isFollowingDefault,
+            defaultDeviceUID: defaultDeviceUID,
+            deviceSelectionMode: deviceSelectionMode,
+            boost: boost,
+            isEQEnabled: localEQSettings.isEnabled,
+            isExpanded: isEQExpanded,
+            isFocused: isFocused,
+            onVolumeChange: onVolumeChange,
+            onMuteChange: onMuteChange,
+            onBoostChange: onBoostChange,
+            onDeviceSelected: onDeviceSelected,
+            onDevicesSelected: onDevicesSelected,
+            onDeviceModeChange: onDeviceModeChange,
+            onSelectFollowDefault: onSelectFollowDefault,
+            onToggleExpanded: onEQToggle
+        ) {
             // EQ panel
             EQPanelView(
                 settings: $localEQSettings,
@@ -186,7 +148,6 @@ struct InactiveAppRow: View {
                 onDeleteUserPreset: onDeleteUserPreset,
                 onRenameUserPreset: onRenameUserPreset
             )
-            .padding(.top, DesignTokens.Spacing.sm)
         }
         .onChange(of: eqSettings) { _, newValue in
             localEQSettings = newValue
