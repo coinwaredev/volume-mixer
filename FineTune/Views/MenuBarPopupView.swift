@@ -365,7 +365,6 @@ struct MenuBarPopupView: View {
                 }
 
                 SoundMenuDisclosureRow(
-                    symbol: "mic.fill",
                     title: "Input",
                     value: defaultInputDeviceName,
                     isExpanded: showingInputDevices
@@ -374,6 +373,7 @@ struct MenuBarPopupView: View {
                         showingInputDevices.toggle()
                     }
                 }
+                .padding(.top, 4)
 
                 if showingInputDevices {
                     ForEach(sortedInputDevices) { device in

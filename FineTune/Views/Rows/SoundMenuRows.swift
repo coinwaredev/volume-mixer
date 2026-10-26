@@ -105,10 +105,9 @@ extension SoundMenuDeviceRow where Trailing == EmptyView {
     }
 }
 
-/// "Input  <current mic>  ›" row that expands the input devices inline,
-/// like "Other Networks ›" in the Wi-Fi menu.
+/// "Input  <current mic>  ›" section header that expands the input devices inline,
+/// styled like the "Output" header above it.
 struct SoundMenuDisclosureRow: View {
-    let symbol: String
     let title: String
     let value: String
     let isExpanded: Bool
@@ -116,21 +115,21 @@ struct SoundMenuDisclosureRow: View {
 
     var body: some View {
         Button(action: onToggle) {
-            HStack(spacing: 10) {
-                DeviceBadge(icon: nil, isSelected: false, symbol: symbol)
+            HStack(spacing: 6) {
                 Text(title)
-                    .font(.system(size: 13))
+                    .sectionHeaderStyle()
                 Spacer(minLength: 4)
                 Text(value)
-                    .font(.system(size: 12.5))
+                    .font(.system(size: 11.5))
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .truncationMode(.middle)
                 Image(systemName: "chevron.right")
-                    .font(.system(size: 10, weight: .semibold))
+                    .font(.system(size: 9, weight: .semibold))
                     .foregroundStyle(.secondary)
                     .rotationEffect(.degrees(isExpanded ? 90 : 0))
             }
+            .frame(minHeight: 18)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
