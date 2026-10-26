@@ -1,0 +1,56 @@
+{
+  "fill": {
+    "automatic-gradient": "extended-srgb:0.10000,0.40000,0.95000,1.00000"
+  },
+  "groups": [
+    {
+      "name": "Knobs",
+      "layers": [
+        {
+          "name": "Knobs",
+          "image-name": "Knobs.svg",
+          "glass": true,
+          "fill": "none"
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.2
+      }
+    },
+    {
+      "name": "Faders",
+      "layers": [
+        {
+          "name": "Levels",
+          "image-name": "Levels.svg",
+          "glass": false,
+          "fill": "none",
+          "opacity": 0.9
+        },
+        {
+          "name": "Tracks",
+          "image-name": "Tracks.svg",
+          "glass": false,
+          "fill": "none",
+          "opacity": 0.22
+        }
+      ],
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.3
+      },
+      "translucency": {
+        "enabled": false,
+        "value": 0.5
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": "shared"
+  }
+}
