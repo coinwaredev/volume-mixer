@@ -31,7 +31,8 @@ cd "$REPO"
 git fetch -q origin
 [ "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" ] || { echo "HEAD isn't what's on origin/main; push first"; exit 1; }
 if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null; then
-  echo "$TAG already exists on GitHub; bump MARKETING_VERSION"; exit 1
+  echo "$TAG already exists on GitHub; bump MARKETING_VERSION"
+  $DRY_RUN || exit 1
 fi
 
 echo "==> Building (Apple silicon + Intel)"
