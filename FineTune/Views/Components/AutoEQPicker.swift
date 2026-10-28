@@ -49,6 +49,7 @@ struct AutoEQPicker: View {
             .background(
                 PopoverHost(
                     isPresented: $isExpanded,
+                    glass: true,
                     preferredColorScheme: appearancePreference.swiftUIColorScheme,
                     nsAppearance: appearancePreference.nsAppearance
                 ) {
@@ -113,13 +114,6 @@ struct AutoEQPicker: View {
             )
         }
         .frame(width: popoverWidth)
-        .background(
-            VisualEffectBackground(material: .menu, blendingMode: .behindWindow)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-        )
-        .overlay {
-            RoundedRectangle(cornerRadius: 8)
-                .strokeBorder(DesignTokens.Colors.glassBorder, lineWidth: 0.5)
-        }
+        .floatingPanelBackground()
     }
 }

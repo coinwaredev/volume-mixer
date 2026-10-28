@@ -13,6 +13,25 @@ extension View {
             self.darkGlassBackground()
         }
     }
+
+    /// Background for a floating panel (AutoEQ): none on macOS 26+, where `PopoverHost(glass: true)`
+    /// puts the panel in Liquid Glass, and the menu material before that.
+    @ViewBuilder
+    func floatingPanelBackground() -> some View {
+        if #available(macOS 26.0, *) {
+            self
+        } else {
+            self
+                .background(
+                    VisualEffectBackground(material: .menu, blendingMode: .behindWindow)
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                )
+                .overlay {
+                    RoundedRectangle(cornerRadius: 8)
+                        .strokeBorder(DesignTokens.Colors.glassBorder, lineWidth: 0.5)
+                }
+        }
+    }
 }
 
 /// Swaps FluidMenuBarExtra's NSVisualEffectView content view for an NSGlassEffectView,

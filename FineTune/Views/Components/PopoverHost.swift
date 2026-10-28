@@ -12,6 +12,8 @@ private class KeyablePanel: NSPanel {
 /// Uses child window relationship for proper dismissal behavior
 struct PopoverHost<Content: View>: NSViewRepresentable {
     @Binding var isPresented: Bool
+    /// Puts the panel in Liquid Glass on macOS 26+; the content then draws no background of its own.
+    var glass: Bool = false
     /// SwiftUI color-scheme override applied to the hosted root view. `nil`
     /// means "follow environment" (System mode).
     let preferredColorScheme: ColorScheme?
@@ -34,6 +36,7 @@ struct PopoverHost<Content: View>: NSViewRepresentable {
             if context.coordinator.panel == nil {
                 context.coordinator.showPanel(
                     from: nsView,
+                    glass: glass,
                     content: content,
                     preferredColorScheme: preferredColorScheme,
                     nsAppearance: nsAppearance
@@ -71,6 +74,7 @@ struct PopoverHost<Content: View>: NSViewRepresentable {
 
         func showPanel<V: View>(
             from parentView: NSView,
+            glass: Bool,
             content: () -> V,
             preferredColorScheme: ColorScheme?,
             nsAppearance: NSAppearance?
@@ -100,17 +104,45 @@ struct PopoverHost<Content: View>: NSViewRepresentable {
             // Use AnyView to allow rootView updates without replacing the hosting view.
             let hosting: NSHostingView<AnyView> = NSHostingView(rootView: AnyView(content().preferredColorScheme(preferredColorScheme)))
             hosting.frame.size = hosting.fittingSize
-            panel.contentView = hosting
+            if #available(macOS 26.0, *), glass {
+                let glassView = NSGlassEffectView()
+                glassView.cornerRadius = 14
+                glassView.contentView = hosting
+                hosting.translatesAutoresizingMaskIntoConstraints = false
+                NSLayoutConstraint.activate([
+                    hosting.topAnchor.constraint(equalTo: glassView.topAnchor),
+                    hosting.bottomAnchor.constraint(equalTo: glassView.bottomAnchor),
+                    hosting.leadingAnchor.constraint(equalTo: glassView.leadingAnchor),
+                    hosting.trailingAnchor.constraint(equalTo: glassView.trailingAnchor),
+                ])
+                panel.contentView = glassView
+                // The window shadow traces the square frame; the glass draws its own edge
+                panel.hasShadow = false
+            } else {
+                panel.contentView = hosting
+            }
             panel.setContentSize(hosting.fittingSize)
             self.hostingView = hosting
 
-            // Position below trigger
+            // Position below trigger, kept on screen
             let parentFrame = parentView.convert(parentView.bounds, to: nil)
             let screenFrame = parentWindow.convertToScreen(parentFrame)
-            let panelOrigin = NSPoint(
+            var panelOrigin = NSPoint(
                 x: screenFrame.origin.x,
                 y: screenFrame.origin.y - panel.frame.height - 4
             )
+            if let visible = (parentWindow.screen ?? NSScreen.main)?.visibleFrame {
+                let margin: CGFloat = 8
+                // Right-align with the trigger when the panel would run off the right edge
+                if panelOrigin.x + panel.frame.width > visible.maxX - margin {
+                    panelOrigin.x = min(screenFrame.maxX, visible.maxX - margin) - panel.frame.width
+                }
+                panelOrigin.x = max(panelOrigin.x, visible.minX + margin)
+                // Open above the trigger when there's no room below
+                if panelOrigin.y < visible.minY + margin {
+                    panelOrigin.y = min(screenFrame.maxY + 4, visible.maxY - margin - panel.frame.height)
+                }
+            }
             panel.setFrameOrigin(panelOrigin)
 
             // Add as child window - links to parent's event stream

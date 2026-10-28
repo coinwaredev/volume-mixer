@@ -131,8 +131,11 @@ struct AutoEQSearchPanel: View {
         .animation(.easeInOut(duration: 0.2), value: fetchError)
         .animation(.easeInOut(duration: 0.2), value: importErrorMessage)
         .background {
-            RoundedRectangle(cornerRadius: 10)
-                .fill(DesignTokens.Colors.recessedBackground)
+            // On Liquid Glass the panel's own glass is the background
+            if #unavailable(macOS 26.0) {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(DesignTokens.Colors.recessedBackground)
+            }
         }
         .onKeyPress(.downArrow) {
             moveHighlight(direction: 1)
